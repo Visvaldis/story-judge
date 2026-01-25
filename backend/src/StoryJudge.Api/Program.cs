@@ -80,6 +80,8 @@ if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientS
         options.ClientId = googleClientId;
         options.ClientSecret = googleClientSecret;
         options.CallbackPath = "/api/auth/callback/google";
+        options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+        options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     });
 }
 
