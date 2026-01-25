@@ -95,6 +95,18 @@ jobs:
           docker build -t $IMAGE ./backend
           docker push $IMAGE
 
+      - name: Get Frontend URL
+        id: frontend-url
+        run: |
+          # Try to get existing frontend URL, or construct it
+          URL=$(gcloud run services describe ${{ env.FRONTEND_SERVICE }} --region=${{ env.GCP_REGION }} --format='value(status.url)' 2>/dev/null || echo "")
+          if [ -z "$URL" ]; then
+            # Construct URL for first deployment
+            PROJECT_NUMBER=$(gcloud projects describe ${{ secrets.GCP_PROJECT_ID }} --format='value(projectNumber)')
+            URL="https://${{ env.FRONTEND_SERVICE }}-${PROJECT_NUMBER}.${{ env.GCP_REGION }}.run.app"
+          fi
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.BACKEND_SERVICE }} \
@@ -102,7 +114,7 @@ jobs:
             --region=${{ env.GCP_REGION }} \
             --platform=managed \
             --allow-unauthenticated \
-            --set-env-vars="ASPNETCORE_ENVIRONMENT=Production" \
+            --set-env-vars="ASPNETCORE_ENVIRONMENT=Production,Cors__AllowedOrigins__0=${{ steps.frontend-url.outputs.url }},Cors__AllowedOrigins__1=http://localhost:5173" \
             --set-secrets="MongoDB__ConnectionString=MONGODB_CONNECTION_STRING:latest,Jwt__Key=JWT_SECRET_KEY:latest,OAuth__Google__ClientId=GOOGLE_CLIENT_ID:latest,OAuth__Google__ClientSecret=GOOGLE_CLIENT_SECRET:latest,OAuth__LinkedIn__ClientId=LINKEDIN_CLIENT_ID:latest,OAuth__LinkedIn__ClientSecret=LINKEDIN_CLIENT_SECRET:latest"
 
       - name: Show Backend URL
