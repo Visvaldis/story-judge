@@ -94,40 +94,18 @@ builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection(
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
-// CORS - Environment variable takes precedence for production deployment
+// CORS
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? ["http://localhost:5173"];
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddDefaultPolicy(policy =>
     {
-        // Environment variable takes precedence (for Cloud Run), then config file
-        // Use IsNullOrWhiteSpace to handle empty string case
-        var envOrigins = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS");
-        var originsConfig = !string.IsNullOrWhiteSpace(envOrigins)
-            ? envOrigins
-            : (builder.Configuration["Cors:AllowedOrigins"] ?? "http://localhost:5173");
-
-        var allowedOrigins = originsConfig
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .ToArray();
-
-        // Log for debugging
-        Console.WriteLine($"[CORS] Environment variable: '{envOrigins ?? "(null)"}'");
-        Console.WriteLine($"[CORS] Allowed Origins: {string.Join(", ", allowedOrigins)}");
-
-        if (allowedOrigins.Length == 0)
-        {
-            Console.WriteLine("[CORS] WARNING: No origins configured! Using wildcard for debugging.");
-            policy.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        }
-        else
-        {
-            policy.WithOrigins(allowedOrigins)
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
-        }
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -145,7 +123,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // CORS must be first to handle preflight requests
-app.UseCors("AllowFrontend");
+app.UseCors();
 
 // Handle forwarded headers from Cloud Run's load balancer
 app.UseForwardedHeaders(new ForwardedHeadersOptions
