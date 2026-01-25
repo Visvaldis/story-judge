@@ -114,7 +114,7 @@ jobs:
             --region=${{ env.GCP_REGION }} \
             --platform=managed \
             --allow-unauthenticated \
-            --set-env-vars="ASPNETCORE_ENVIRONMENT=Production,Cors__AllowedOrigins__0=${{ steps.frontend-url.outputs.url }},Cors__AllowedOrigins__1=http://localhost:5173" \
+            --set-env-vars="ASPNETCORE_ENVIRONMENT=Production,CORS_ALLOWED_ORIGINS=${{ steps.frontend-url.outputs.url }}" \
             --set-secrets="MongoDB__ConnectionString=MONGODB_CONNECTION_STRING:latest,Jwt__Key=JWT_SECRET_KEY:latest,OAuth__Google__ClientId=GOOGLE_CLIENT_ID:latest,OAuth__Google__ClientSecret=GOOGLE_CLIENT_SECRET:latest,OAuth__LinkedIn__ClientId=LINKEDIN_CLIENT_ID:latest,OAuth__LinkedIn__ClientSecret=LINKEDIN_CLIENT_SECRET:latest"
 
       - name: Show Backend URL

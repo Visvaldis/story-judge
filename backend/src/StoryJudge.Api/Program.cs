@@ -83,8 +83,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-            ?? new[] { "http://localhost:5173" };
+        // Support comma-separated origins from environment variable or config
+        var originsConfig = builder.Configuration["Cors:AllowedOrigins"]
+            ?? Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS")
+            ?? "http://localhost:5173";
+
+        var allowedOrigins = originsConfig
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToArray();
 
         policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
