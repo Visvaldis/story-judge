@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,9 +80,10 @@ if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientS
     {
         options.ClientId = googleClientId;
         options.ClientSecret = googleClientSecret;
-        options.CallbackPath = "/api/auth/callback/google";
+        options.CallbackPath = "/signin-google";
         options.CorrelationCookie.SameSite = SameSiteMode.Lax;
         options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.SaveTokens = true;
     });
 }
 
@@ -93,7 +95,9 @@ if (!string.IsNullOrEmpty(linkedInClientId) && !string.IsNullOrEmpty(linkedInCli
     {
         options.ClientId = linkedInClientId;
         options.ClientSecret = linkedInClientSecret;
-        options.CallbackPath = "/api/auth/callback/linkedin";
+        options.CallbackPath = "/signin-linkedin";
+        options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+        options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     });
 }
 
@@ -124,7 +128,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -148,7 +156,12 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseIpRateLimiting();
+
+// Skip rate limiting in Testing environment
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseIpRateLimiting();
+}
 
 // Only use HTTPS redirection in development (Cloud Run handles HTTPS in production)
 if (app.Environment.IsDevelopment())
