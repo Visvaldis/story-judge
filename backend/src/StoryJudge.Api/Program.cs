@@ -98,21 +98,34 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         // Environment variable takes precedence (for Cloud Run), then config file
-        var originsConfig = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS")
-            ?? builder.Configuration["Cors:AllowedOrigins"]
-            ?? "http://localhost:5173";
+        // Use IsNullOrWhiteSpace to handle empty string case
+        var envOrigins = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS");
+        var originsConfig = !string.IsNullOrWhiteSpace(envOrigins)
+            ? envOrigins
+            : (builder.Configuration["Cors:AllowedOrigins"] ?? "http://localhost:5173");
 
         var allowedOrigins = originsConfig
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .ToArray();
 
-        // Log the configured origins at startup for debugging
-        Console.WriteLine($"CORS Allowed Origins: {string.Join(", ", allowedOrigins)}");
+        // Log for debugging
+        Console.WriteLine($"[CORS] Environment variable: '{envOrigins ?? "(null)"}'");
+        Console.WriteLine($"[CORS] Allowed Origins: {string.Join(", ", allowedOrigins)}");
 
-        policy.WithOrigins(allowedOrigins)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        if (allowedOrigins.Length == 0)
+        {
+            Console.WriteLine("[CORS] WARNING: No origins configured! Using wildcard for debugging.");
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+        else
+        {
+            policy.WithOrigins(allowedOrigins)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
     });
 });
 

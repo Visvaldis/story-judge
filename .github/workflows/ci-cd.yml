@@ -98,12 +98,11 @@ jobs:
       - name: Get Frontend URL
         id: frontend-url
         run: |
-          # Try to get existing frontend URL, or construct it
+          # Get the actual frontend URL from Cloud Run
           URL=$(gcloud run services describe ${{ env.FRONTEND_SERVICE }} --region=${{ env.GCP_REGION }} --format='value(status.url)' 2>/dev/null || echo "")
           if [ -z "$URL" ]; then
-            # Construct URL for first deployment
-            PROJECT_NUMBER=$(gcloud projects describe ${{ secrets.GCP_PROJECT_ID }} --format='value(projectNumber)')
-            URL="https://${{ env.FRONTEND_SERVICE }}-${PROJECT_NUMBER}.${{ env.GCP_REGION }}.run.app"
+            echo "ERROR: Could not get frontend URL from Cloud Run"
+            exit 1
           fi
           echo "Frontend URL for CORS: $URL"
           echo "url=$URL" >> $GITHUB_OUTPUT
