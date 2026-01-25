@@ -35,7 +35,7 @@ var jwtKey = builder.Configuration["Jwt:Key"] ?? "StoryJudgeDefaultSecretKey1234
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "StoryJudge";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "StoryJudge";
 
-builder.Services.AddAuthentication(options =>
+var authBuilder = builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -52,19 +52,32 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
-})
-.AddGoogle(options =>
-{
-    options.ClientId = builder.Configuration["OAuth:Google:ClientId"] ?? "";
-    options.ClientSecret = builder.Configuration["OAuth:Google:ClientSecret"] ?? "";
-    options.CallbackPath = "/api/auth/callback/google";
-})
-.AddLinkedIn(options =>
-{
-    options.ClientId = builder.Configuration["OAuth:LinkedIn:ClientId"] ?? "";
-    options.ClientSecret = builder.Configuration["OAuth:LinkedIn:ClientSecret"] ?? "";
-    options.CallbackPath = "/api/auth/callback/linkedin";
 });
+
+// Only add OAuth providers if credentials are configured
+var googleClientId = builder.Configuration["OAuth:Google:ClientId"];
+var googleClientSecret = builder.Configuration["OAuth:Google:ClientSecret"];
+if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientSecret))
+{
+    authBuilder.AddGoogle(options =>
+    {
+        options.ClientId = googleClientId;
+        options.ClientSecret = googleClientSecret;
+        options.CallbackPath = "/api/auth/callback/google";
+    });
+}
+
+var linkedInClientId = builder.Configuration["OAuth:LinkedIn:ClientId"];
+var linkedInClientSecret = builder.Configuration["OAuth:LinkedIn:ClientSecret"];
+if (!string.IsNullOrEmpty(linkedInClientId) && !string.IsNullOrEmpty(linkedInClientSecret))
+{
+    authBuilder.AddLinkedIn(options =>
+    {
+        options.ClientId = linkedInClientId;
+        options.ClientSecret = linkedInClientSecret;
+        options.CallbackPath = "/api/auth/callback/linkedin";
+    });
+}
 
 builder.Services.AddAuthorization(options =>
 {
@@ -112,10 +125,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// CORS must be first to handle preflight requests and add headers to error responses
+app.UseCors("AllowFrontend");
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseIpRateLimiting();
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
