@@ -27,7 +27,11 @@ public class MongoDbContext
             new(Builders<User>.IndexKeys.Ascending(u => u.Email),
                 new CreateIndexOptions { Unique = true }),
             new(Builders<User>.IndexKeys.Ascending(u => u.Username),
-                new CreateIndexOptions { Unique = true, Sparse = true })
+                new CreateIndexOptions<User>
+                {
+                    Unique = true,
+                    PartialFilterExpression = Builders<User>.Filter.Type(u => u.Username, MongoDB.Bson.BsonType.String)
+                })
         };
         Users.Indexes.CreateMany(userIndexes);
 
