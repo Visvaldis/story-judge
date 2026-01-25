@@ -10,6 +10,11 @@ export interface User {
   createdAt: string;
 }
 
+export interface LoginResponse {
+  token: string;
+  user: User;
+}
+
 export interface CoverageItem {
   key: string;
   label: string;

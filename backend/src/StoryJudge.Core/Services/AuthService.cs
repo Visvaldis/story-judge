@@ -21,6 +21,65 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
+    public async Task<(User User, string Token)> RegisterAsync(string email, string password, string displayName)
+    {
+        // Check if email already exists
+        var existingUser = await _userRepository.GetByEmailAsync(email);
+        if (existingUser != null)
+        {
+            throw new InvalidOperationException("Email already registered");
+        }
+
+        // Validate password strength
+        if (password.Length < 8)
+        {
+            throw new InvalidOperationException("Password must be at least 8 characters");
+        }
+
+        var user = new User
+        {
+            Email = email,
+            DisplayName = displayName,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+            OAuthProvider = OAuthProvider.Email,
+            OAuthId = null,
+            RoleLevel = RoleLevel.User,
+            EmailVerified = false
+        };
+
+        user = await _userRepository.CreateAsync(user);
+        var token = GenerateJwtToken(user);
+        return (user, token);
+    }
+
+    public async Task<(User User, string Token)> LoginAsync(string email, string password)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+
+        if (user == null)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password");
+        }
+
+        if (user.OAuthProvider != OAuthProvider.Email || string.IsNullOrEmpty(user.PasswordHash))
+        {
+            throw new UnauthorizedAccessException("Please use OAuth login for this account");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        {
+            throw new UnauthorizedAccessException("Invalid email or password");
+        }
+
+        if (user.IsBanned)
+        {
+            throw new UnauthorizedAccessException("User is banned");
+        }
+
+        var token = GenerateJwtToken(user);
+        return (user, token);
+    }
+
     public async Task<(User User, string Token)> AuthenticateOAuthAsync(
         OAuthProvider provider,
         string oauthId,
@@ -46,7 +105,8 @@ public class AuthService : IAuthService
                 AvatarUrl = avatarUrl,
                 OAuthProvider = provider,
                 OAuthId = oauthId,
-                RoleLevel = RoleLevel.User
+                RoleLevel = RoleLevel.User,
+                EmailVerified = true // OAuth emails are pre-verified
             };
             user = await _userRepository.CreateAsync(user);
         }

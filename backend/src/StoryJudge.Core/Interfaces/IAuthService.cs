@@ -12,6 +12,8 @@ public interface IAuthService
         string email,
         string displayName,
         string? avatarUrl);
+    Task<(User User, string Token)> RegisterAsync(string email, string password, string displayName);
+    Task<(User User, string Token)> LoginAsync(string email, string password);
     string GenerateJwtToken(User user);
     Task<UserDto?> GetCurrentUserAsync(string userId);
 }

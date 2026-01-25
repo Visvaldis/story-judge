@@ -34,7 +34,13 @@ public class User
     public OAuthProvider OAuthProvider { get; set; }
 
     [BsonElement("oauthId")]
-    public string OAuthId { get; set; } = null!;
+    public string? OAuthId { get; set; }
+
+    [BsonElement("passwordHash")]
+    public string? PasswordHash { get; set; }
+
+    [BsonElement("emailVerified")]
+    public bool EmailVerified { get; set; } = false;
 
     [BsonElement("isBanned")]
     public bool IsBanned { get; set; } = false;

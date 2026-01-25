@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { User } from '../types';
 import { authService } from '../services/auth';
+import type { RegisterRequest, LoginRequest } from '../services/auth';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null);
@@ -11,6 +12,40 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => !!user.value);
   const isAdmin = computed(() => user.value?.roleLevel === 'Admin');
   const isModerator = computed(() => user.value?.roleLevel === 'Admin' || user.value?.roleLevel === 'Moderator');
+
+  async function register(data: RegisterRequest) {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const response = await authService.register(data);
+      authService.setToken(response.token);
+      user.value = response.user;
+      return true;
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Registration failed';
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function login(data: LoginRequest) {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const response = await authService.login(data);
+      authService.setToken(response.token);
+      user.value = response.user;
+      return true;
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Login failed';
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  }
 
   async function fetchCurrentUser() {
     if (!authService.isAuthenticated()) {
@@ -55,6 +90,8 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     isAdmin,
     isModerator,
+    register,
+    login,
     fetchCurrentUser,
     setToken,
     logout,

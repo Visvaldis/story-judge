@@ -22,6 +22,54 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpPost("register")]
+    public async Task<ActionResult<LoginResponse>> Register([FromBody] RegisterRequest request)
+    {
+        try
+        {
+            var (user, token) = await _authService.RegisterAsync(request.Email, request.Password, request.DisplayName);
+            return Ok(new LoginResponse(token, new UserDto(
+                user.Id,
+                user.Email,
+                user.DisplayName,
+                user.Username,
+                user.AvatarUrl,
+                user.Bio,
+                user.RoleLevel.ToString(),
+                user.ReputationScore,
+                user.CreatedAt
+            )));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
+    {
+        try
+        {
+            var (user, token) = await _authService.LoginAsync(request.Email, request.Password);
+            return Ok(new LoginResponse(token, new UserDto(
+                user.Id,
+                user.Email,
+                user.DisplayName,
+                user.Username,
+                user.AvatarUrl,
+                user.Bio,
+                user.RoleLevel.ToString(),
+                user.ReputationScore,
+                user.CreatedAt
+            )));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+    }
+
     [HttpGet("login/google")]
     public IActionResult LoginGoogle([FromQuery] string? returnUrl = null)
     {
