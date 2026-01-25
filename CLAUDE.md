@@ -8,66 +8,101 @@ StoryJudge is a behavioral interview story review platform where users create ST
 
 ## Technology Stack
 
-- **Frontend**: Vue.js
-- **Backend**: C# .NET
+- **Frontend**: Vue 3 + TypeScript + Vite + Pinia
+- **Backend**: .NET 10 (C#) Web API
 - **Database**: MongoDB
-- **Deployment**: GCP
+- **Deployment**: Google Cloud Run with GitHub Actions CI/CD
 
-## Project Status
+## Quick Start
 
-This project is in the pre-implementation phase. The design document (`README.md`) contains the complete specification including data models, API endpoints, and implementation plan.
-
-## Expected Project Structure
-
-When implementing, organize the codebase as:
-```
-/backend          # C# .NET API
-/frontend         # Vue.js application
-```
-
-## Build Commands (once implemented)
-
-**Backend (.NET):**
 ```bash
+# Start all services (MongoDB, Backend, Frontend)
+./start.sh
+
+# Or manually:
+cd backend && docker-compose up -d          # Start MongoDB
+cd backend && dotnet run --project src/StoryJudge.Api
+cd frontend && npm run dev
+```
+
+**URLs:**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5107/api
+- Swagger: http://localhost:5107/swagger (dev only)
+
+## Build Commands
+
+**Backend:**
+```bash
+cd backend
 dotnet restore
 dotnet build
-dotnet run --project backend
-dotnet test
+dotnet test                                    # Run all tests
+dotnet run --project src/StoryJudge.Api       # Run API
 ```
 
-**Frontend (Vue.js):**
+**Frontend:**
 ```bash
-cd frontend && npm install
-cd frontend && npm run dev
-cd frontend && npm run build
-cd frontend && npm run lint
+cd frontend
+npm install
+npm run dev          # Development server
+npm run build        # Production build
+npm run lint         # ESLint check
+npm run lint:fix     # Auto-fix lint issues
 ```
 
-## Key Architecture Decisions
+## Architecture
 
-### Data Model
-Core entities: User, Story, Review, StoryCoverage, Report, Reaction. See design doc section 7 for full schema.
+### Backend Structure (Clean Architecture)
+```
+backend/src/
+├── StoryJudge.Api/           # ASP.NET Core Web API
+│   ├── Controllers/          # REST endpoints
+│   ├── Middleware/           # Error handling, etc.
+│   └── Program.cs            # DI setup, middleware pipeline
+├── StoryJudge.Core/          # Domain layer
+│   ├── Models/               # Domain entities (User, Story, Review, Report)
+│   ├── DTOs/                 # Data transfer objects
+│   ├── Enums/                # Visibility, StoryType, RoleLevel, etc.
+│   ├── Services/             # Business logic
+│   └── Interfaces/           # Repository & service contracts
+├── StoryJudge.Infrastructure/ # Data access
+│   ├── Data/                 # MongoDbContext
+│   └── Repositories/         # MongoDB implementations
+└── StoryJudge.Tests/         # Unit tests
+```
 
-### Story Visibility
-Three-tier system requiring careful permission checks:
-- **PRIVATE**: Author only
-- **UNLISTED**: Author + anyone with shareToken
-- **PUBLIC**: All authenticated users
+### Frontend Structure
+```
+frontend/src/
+├── views/           # Page components (Dashboard, StoryEditor, Explore, etc.)
+├── components/      # Reusable components (Navbar, ReviewForm, StoryCard)
+├── stores/          # Pinia stores (auth, story, review)
+├── services/        # API client (api.ts, auth.ts, stories.ts, reviews.ts)
+├── router/          # Vue Router configuration
+└── types/           # TypeScript interfaces
+```
 
-### Review System
-7-category rubric scoring (1-5 scale): Clarity, Ownership, Impact, Decision Making, Communication, Reflection, Technical Depth (optional). Store denormalized aggregates on Story for performance.
+### Key Patterns
 
-### Coverage Detection
-MVP: Manual checklist + basic regex heuristics (detect metrics, "I" language, non-empty sections). V1: AI-assisted detection.
+- **Authentication**: JWT tokens + OAuth (Google/LinkedIn). Auth state managed in Pinia `auth` store.
+- **API Client**: Axios instance with token interceptor in `frontend/src/services/api.ts`
+- **Story Visibility**: Three-tier system (PRIVATE/UNLISTED/PUBLIC) with shareToken for unlisted
+- **Review Aggregation**: Denormalized scores stored on Story entity for performance
 
-## Implementation Order
+## Configuration
 
-Follow the 8-phase plan from design doc section 18:
-1. Backend setup + auth + database schema
-2. Story CRUD + visibility handling
-3. Explore feed (public stories)
-4. Review system + aggregation
-5. Coverage checklist + heuristics
-6. Dashboard + story analytics
-7. Reporting + admin tools
-8. Rate limiting + polish
+Backend config is in `backend/src/StoryJudge.Api/appsettings.json`. Key settings:
+- `MongoDB:ConnectionString` - Database connection
+- `Jwt:Key` - JWT signing key (use secrets in production)
+- `Cors:AllowedOrigins` - Allowed frontend origins
+
+Production overrides via Cloud Run environment variables and secrets.
+
+## CI/CD
+
+GitHub Actions workflow in `.github/workflows/ci-cd.yml`:
+- **CI**: Build + test backend, lint + build frontend
+- **CD**: Deploy to Google Cloud Run (triggers on push to master)
+
+Required GitHub secrets: `GCP_PROJECT_ID`, `GCP_SA_KEY`, MongoDB and OAuth secrets in Secret Manager.
