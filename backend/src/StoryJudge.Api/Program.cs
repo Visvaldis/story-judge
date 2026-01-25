@@ -14,8 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // MongoDB Configuration
 var mongoConnectionString = builder.Configuration["MongoDB:ConnectionString"]
-    ?? "mongodb://storyjudge:storyjudge_password@localhost:27017/storyjudge?authSource=storyjudge";
-var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"] ?? "storyjudge";
+    ?? throw new InvalidOperationException("MongoDB:ConnectionString is not configured");
+var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"]
+    ?? throw new InvalidOperationException("MongoDB:DatabaseName is not configured");
 
 builder.Services.AddSingleton(_ => new MongoDbContext(mongoConnectionString, mongoDatabaseName));
 
@@ -32,7 +33,8 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
 // JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "StoryJudgeDefaultSecretKey123456789012345678901234567890";
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("Jwt:Key is not configured");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "StoryJudge";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "StoryJudge";
 
