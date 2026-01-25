@@ -12,6 +12,12 @@ using StoryJudge.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load local configuration files (gitignored, for secrets)
+builder.Configuration.AddJsonFile(
+    $"appsettings.{builder.Environment.EnvironmentName}.local.json",
+    optional: true,
+    reloadOnChange: true);
+
 // MongoDB Configuration
 var mongoConnectionString = builder.Configuration["MongoDB:ConnectionString"]
     ?? throw new InvalidOperationException("MongoDB:ConnectionString is not configured");

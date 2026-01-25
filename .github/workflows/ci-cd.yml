@@ -115,8 +115,15 @@ jobs:
             --region=${{ env.GCP_REGION }} \
             --platform=managed \
             --allow-unauthenticated \
-            --set-env-vars="ASPNETCORE_ENVIRONMENT=Production,CORS_ALLOWED_ORIGINS=${{ steps.frontend-url.outputs.url }}" \
-            --set-secrets="MongoDB__ConnectionString=MONGODB_CONNECTION_STRING:latest,Jwt__Key=JWT_SECRET_KEY:latest,OAuth__Google__ClientId=GOOGLE_CLIENT_ID:latest,OAuth__Google__ClientSecret=GOOGLE_CLIENT_SECRET:latest,OAuth__LinkedIn__ClientId=LINKEDIN_CLIENT_ID:latest,OAuth__LinkedIn__ClientSecret=LINKEDIN_CLIENT_SECRET:latest"
+            --set-env-vars="\
+              ASPNETCORE_ENVIRONMENT=Production,\
+              CORS_ALLOWED_ORIGINS=${{ steps.frontend-url.outputs.url }},\
+              Frontend__Url=${{ steps.frontend-url.outputs.url }}" \
+            --set-secrets="\
+              MongoDB__ConnectionString=MONGODB_CONNECTION_STRING:latest,\
+              Jwt__Key=JWT_SECRET_KEY:latest,\
+              OAuth__Google__ClientId=GOOGLE_CLIENT_ID:latest,\
+              OAuth__Google__ClientSecret=GOOGLE_CLIENT_SECRET:latest"
 
       - name: Show Backend URL
         run: |
