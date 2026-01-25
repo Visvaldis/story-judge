@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using StoryJudge.Api.Middleware;
 using StoryJudge.Core.Interfaces;
@@ -91,19 +92,22 @@ builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection(
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
-// CORS
+// CORS - Environment variable takes precedence for production deployment
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        // Support comma-separated origins from environment variable or config
-        var originsConfig = builder.Configuration["Cors:AllowedOrigins"]
-            ?? Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS")
+        // Environment variable takes precedence (for Cloud Run), then config file
+        var originsConfig = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS")
+            ?? builder.Configuration["Cors:AllowedOrigins"]
             ?? "http://localhost:5173";
 
         var allowedOrigins = originsConfig
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .ToArray();
+
+        // Log the configured origins at startup for debugging
+        Console.WriteLine($"CORS Allowed Origins: {string.Join(", ", allowedOrigins)}");
 
         policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
@@ -125,11 +129,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// CORS must be first to handle preflight requests and add headers to error responses
+// CORS must be first to handle preflight requests
 app.UseCors("AllowFrontend");
+
+// Handle forwarded headers from Cloud Run's load balancer
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+                     | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
+
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseIpRateLimiting();
-app.UseHttpsRedirection();
+
+// Only use HTTPS redirection in development (Cloud Run handles HTTPS in production)
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
