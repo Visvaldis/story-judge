@@ -1,4 +1,43 @@
-# “StoryJudge” (Behavioral Interview Story Review Platform)
+# "StoryJudge" (Behavioral Interview Story Review Platform)
+
+## Quick Start
+
+```bash
+# Start all services (MongoDB, Backend, Frontend)
+./start.sh
+
+# Stop all services
+./stop.sh
+```
+
+Once running:
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:5000
+- **Swagger UI**: http://localhost:5000/swagger
+
+### Prerequisites
+- Docker (for MongoDB)
+- .NET 10 SDK
+- Node.js 18+
+
+### OAuth Setup (Optional)
+To enable Google/LinkedIn login, add your OAuth credentials to `backend/src/StoryJudge.Api/appsettings.json`:
+```json
+{
+  "OAuth": {
+    "Google": {
+      "ClientId": "your-google-client-id",
+      "ClientSecret": "your-google-client-secret"
+    },
+    "LinkedIn": {
+      "ClientId": "your-linkedin-client-id",
+      "ClientSecret": "your-linkedin-client-secret"
+    }
+  }
+}
+```
+
+---
 
 ## 1) Purpose & Vision
 
