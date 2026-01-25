@@ -49,14 +49,15 @@ const authStore = useAuthStore();
 .hero h1 {
   font-size: 3rem;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #646cff 0%, #42b883 100%);
+  background: linear-gradient(135deg, var(--color-accent) 0%, #42b883 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .tagline {
   font-size: 1.25rem;
-  color: #888;
+  color: var(--color-text-secondary);
   margin-bottom: 3rem;
 }
 
@@ -68,19 +69,19 @@ const authStore = useAuthStore();
 }
 
 .feature {
-  background: #1a1a2e;
+  background: var(--color-bg-secondary);
   padding: 2rem;
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
 }
 
 .feature h3 {
-  color: #646cff;
+  color: var(--color-accent);
   margin-bottom: 0.5rem;
 }
 
 .feature p {
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .cta-buttons {
@@ -102,13 +103,13 @@ const authStore = useAuthStore();
 }
 
 .btn-primary {
-  background: #646cff;
+  background: var(--color-accent);
   color: white;
 }
 
 .btn-secondary {
   background: transparent;
-  border: 2px solid #646cff;
-  color: #646cff;
+  border: 2px solid var(--color-accent);
+  color: var(--color-accent);
 }
 </style>

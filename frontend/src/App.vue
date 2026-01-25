@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useAuthStore } from './stores/auth';
+import { useThemeStore } from './stores/theme';
 import Navbar from './components/Navbar.vue';
 
 const authStore = useAuthStore();
+useThemeStore(); // Initialize theme on app load
 
 onMounted(async () => {
   await authStore.fetchCurrentUser();

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useAuthStore } from '../stores/auth';
+import { useThemeStore } from '../stores/theme';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
+const themeStore = useThemeStore();
 const router = useRouter();
 
 function handleLogout() {
@@ -19,6 +21,15 @@ function handleLogout() {
 
     <div class="navbar-menu">
       <router-link to="/explore" class="nav-link">Explore</router-link>
+
+      <button class="theme-toggle" @click="themeStore.toggleTheme" :title="themeStore.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+        <svg v-if="themeStore.theme === 'dark'" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
+        </svg>
+        <svg v-else viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
 
       <template v-if="authStore.isAuthenticated">
         <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
@@ -49,14 +60,14 @@ function handleLogout() {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: #1a1a2e;
-  border-bottom: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .brand-link {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #646cff;
+  color: var(--color-accent);
   text-decoration: none;
 }
 
@@ -67,7 +78,7 @@ function handleLogout() {
 }
 
 .nav-link {
-  color: #ffffffde;
+  color: var(--color-text-primary);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -75,16 +86,36 @@ function handleLogout() {
 }
 
 .nav-link:hover {
-  background: #333;
+  background: var(--color-bg-hover);
 }
 
 .btn-primary {
-  background: #646cff;
+  background: var(--color-accent);
   color: white;
 }
 
 .btn-primary:hover {
-  background: #535bf2;
+  background: var(--color-accent-hover);
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-accent);
 }
 
 .user-menu {
@@ -100,19 +131,19 @@ function handleLogout() {
 }
 
 .user-name {
-  color: #ffffffde;
+  color: var(--color-text-primary);
 }
 
 .btn-logout {
   background: transparent;
-  border: 1px solid #666;
-  color: #ffffffde;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .btn-logout:hover {
-  background: #333;
+  background: var(--color-bg-hover);
 }
 </style>

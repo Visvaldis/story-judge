@@ -76,8 +76,8 @@ async function deleteStory() {
 
 <style scoped>
 .story-card {
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 1.25rem;
   cursor: pointer;
@@ -86,7 +86,7 @@ async function deleteStory() {
 
 .story-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .card-header {
@@ -96,7 +96,8 @@ async function deleteStory() {
 }
 
 .story-type {
-  background: #646cff;
+  background: var(--color-accent);
+  color: white;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -109,11 +110,13 @@ async function deleteStory() {
 }
 
 .story-status.draft {
-  background: #666;
+  background: var(--color-text-muted);
+  color: white;
 }
 
 .story-status.published {
-  background: #42b883;
+  background: var(--color-success);
+  color: white;
 }
 
 .card-title {
@@ -126,7 +129,7 @@ async function deleteStory() {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  color: #888;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
 }
 
@@ -144,7 +147,7 @@ async function deleteStory() {
 }
 
 .tag {
-  background: #333;
+  background: var(--color-bg-hover);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -154,7 +157,7 @@ async function deleteStory() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--color-border);
   padding-top: 0.75rem;
   margin-top: 0.5rem;
 }
@@ -162,7 +165,7 @@ async function deleteStory() {
 .stats {
   display: flex;
   gap: 1rem;
-  color: #888;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
 }
 
@@ -176,13 +179,14 @@ async function deleteStory() {
   border-radius: 4px;
   font-size: 0.75rem;
   text-decoration: none;
-  background: #333;
-  color: white;
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
   border: none;
   cursor: pointer;
 }
 
 .action-btn.delete {
-  background: #dc3545;
+  background: var(--color-error);
+  color: white;
 }
 </style>

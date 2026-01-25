@@ -63,7 +63,7 @@ onMounted(async () => {
 }
 
 .btn-primary {
-  background: #646cff;
+  background: var(--color-accent);
   color: white;
 }
 
@@ -80,19 +80,19 @@ onMounted(async () => {
 .empty-state {
   text-align: center;
   padding: 3rem;
-  background: #1a1a2e;
+  background: var(--color-bg-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
 }
 
 .empty-state p {
-  color: #888;
+  color: var(--color-text-secondary);
   margin-bottom: 1rem;
 }
 
 .loading {
   text-align: center;
   padding: 2rem;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 </style>

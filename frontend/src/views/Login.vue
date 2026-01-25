@@ -128,10 +128,10 @@ async function handleSubmit() {
 }
 
 .login-card {
-  background: #1a1a2e;
+  background: var(--color-bg-secondary);
   padding: 2.5rem;
   border-radius: 12px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
   text-align: center;
   max-width: 420px;
   width: 100%;
@@ -143,13 +143,13 @@ async function handleSubmit() {
 }
 
 .login-card > p {
-  color: #888;
+  color: var(--color-text-secondary);
   margin-bottom: 1.5rem;
 }
 
 .tabs {
   display: flex;
-  background: #16162a;
+  background: var(--color-bg-tertiary);
   border-radius: 8px;
   padding: 4px;
   margin-bottom: 1.5rem;
@@ -160,7 +160,7 @@ async function handleSubmit() {
   padding: 0.75rem;
   border: none;
   background: transparent;
-  color: #888;
+  color: var(--color-text-secondary);
   font-weight: 500;
   cursor: pointer;
   border-radius: 6px;
@@ -168,12 +168,12 @@ async function handleSubmit() {
 }
 
 .tabs button.active {
-  background: #646cff;
+  background: var(--color-accent);
   color: white;
 }
 
 .tabs button:hover:not(.active) {
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .email-form {
@@ -191,32 +191,32 @@ async function handleSubmit() {
 
 .form-group label {
   font-size: 0.875rem;
-  color: #ccc;
+  color: var(--color-text-secondary);
 }
 
 .form-group input {
   padding: 0.75rem 1rem;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  background: #16162a;
-  color: white;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
   font-size: 1rem;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: var(--color-accent);
 }
 
 .form-group .hint {
   font-size: 0.75rem;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .error-message {
   background: rgba(239, 68, 68, 0.1);
-  border: 1px solid #ef4444;
-  color: #ef4444;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
   padding: 0.75rem;
   border-radius: 8px;
   font-size: 0.875rem;
@@ -224,7 +224,7 @@ async function handleSubmit() {
 
 .submit-btn {
   padding: 0.875rem;
-  background: #646cff;
+  background: var(--color-accent);
   color: white;
   border: none;
   border-radius: 8px;
@@ -236,7 +236,7 @@ async function handleSubmit() {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #5558dd;
+  background: var(--color-accent-hover);
 }
 
 .submit-btn:disabled {
@@ -255,12 +255,12 @@ async function handleSubmit() {
   content: '';
   flex: 1;
   height: 1px;
-  background: #333;
+  background: var(--color-border);
 }
 
 .divider span {
   padding: 0 1rem;
-  color: #666;
+  color: var(--color-text-muted);
   font-size: 0.875rem;
 }
 
@@ -296,6 +296,6 @@ async function handleSubmit() {
 .note {
   margin-top: 1.5rem;
   font-size: 0.75rem;
-  color: #666;
+  color: var(--color-text-muted);
 }
 </style>
