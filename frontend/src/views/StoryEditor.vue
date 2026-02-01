@@ -249,17 +249,17 @@ async function handlePublish() {
 
 .form-group label {
   font-weight: 500;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
   padding: 0.75rem;
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  color: white;
+  color: var(--color-text-primary);
   font-family: inherit;
 }
 
@@ -272,9 +272,9 @@ async function handlePublish() {
   flex-direction: column;
   gap: 1rem;
   padding: 1.5rem;
-  background: #1a1a2e;
+  background: var(--color-bg-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
 }
 
 .tags-input {
@@ -294,7 +294,7 @@ async function handlePublish() {
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background: #646cff;
+  background: var(--color-accent);
   border-radius: 4px;
   font-size: 0.875rem;
 }
@@ -327,19 +327,19 @@ async function handlePublish() {
 }
 
 .btn-primary {
-  background: #646cff;
+  background: var(--color-accent);
   color: white;
 }
 
 .btn-success {
-  background: #42b883;
+  background: var(--color-success);
   color: white;
 }
 
 .error {
-  color: #ff6b6b;
+  color: var(--color-error);
   padding: 1rem;
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(239, 68, 68, 0.1);
   border-radius: 4px;
 }
 

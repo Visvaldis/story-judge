@@ -79,7 +79,7 @@ onMounted(loadStories);
 }
 
 .explore-header p {
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .filters {
@@ -96,15 +96,15 @@ onMounted(loadStories);
 }
 
 .filter-group label {
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .filter-group select {
   padding: 0.5rem 1rem;
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .stories-grid {
@@ -116,12 +116,12 @@ onMounted(loadStories);
 .empty-state {
   text-align: center;
   padding: 3rem;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .loading {
   text-align: center;
   padding: 2rem;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 </style>

@@ -79,14 +79,14 @@ defineProps<{
 .empty {
   text-align: center;
   padding: 2rem;
-  color: #888;
-  background: #1a1a2e;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
   border-radius: 8px;
 }
 
 .review-card {
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 1.5rem;
 }
@@ -115,12 +115,12 @@ defineProps<{
 }
 
 .date {
-  color: #666;
+  color: var(--color-text-muted);
   font-size: 0.875rem;
 }
 
 .overall-score {
-  background: #42b883;
+  background: var(--color-success);
   color: white;
   font-size: 1.25rem;
   font-weight: bold;
@@ -134,7 +134,7 @@ defineProps<{
   gap: 0.75rem;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: #16162a;
+  background: var(--color-bg-tertiary);
   border-radius: 4px;
 }
 
@@ -145,7 +145,7 @@ defineProps<{
 }
 
 .score-label {
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .score-value {
@@ -161,7 +161,7 @@ defineProps<{
 .feedback h4,
 .strengths h4,
 .improvements h4 {
-  color: #888;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
 }
@@ -182,10 +182,10 @@ defineProps<{
 }
 
 .strengths {
-  color: #42b883;
+  color: var(--color-success);
 }
 
 .improvements {
-  color: #f0ad4e;
+  color: var(--color-warning);
 }
 </style>

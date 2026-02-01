@@ -144,7 +144,7 @@ function copyShareLink() {
 .loading, .error {
   text-align: center;
   padding: 2rem;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .story-header {
@@ -158,7 +158,7 @@ function copyShareLink() {
 }
 
 .story-type {
-  background: #646cff;
+  background: var(--color-accent);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -171,16 +171,16 @@ function copyShareLink() {
 }
 
 .story-status.draft {
-  background: #666;
+  background: var(--color-text-muted);
 }
 
 .story-status.published {
-  background: #42b883;
+  background: var(--color-success);
 }
 
 .visibility {
-  background: #f0ad4e;
-  color: #333;
+  background: var(--color-warning);
+  color: #1a1a2e;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -190,7 +190,7 @@ function copyShareLink() {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #888;
+  color: var(--color-text-secondary);
   margin-bottom: 1rem;
 }
 
@@ -201,7 +201,7 @@ function copyShareLink() {
 }
 
 .date {
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .tags {
@@ -211,7 +211,7 @@ function copyShareLink() {
 }
 
 .tag {
-  background: #333;
+  background: var(--color-bg-hover);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -232,8 +232,8 @@ function copyShareLink() {
 }
 
 .btn-secondary {
-  background: #333;
-  color: white;
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 .story-content {
@@ -245,13 +245,13 @@ function copyShareLink() {
 .star-section {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #1a1a2e;
+  background: var(--color-bg-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
 }
 
 .star-section h2 {
-  color: #646cff;
+  color: var(--color-accent);
   font-size: 1rem;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
@@ -275,7 +275,7 @@ function copyShareLink() {
   flex-direction: column;
   align-items: center;
   padding: 1.5rem;
-  background: #1a1a2e;
+  background: var(--color-bg-secondary);
   border-radius: 8px;
   width: fit-content;
 }
@@ -283,11 +283,11 @@ function copyShareLink() {
 .overall-score .score {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #42b883;
+  color: var(--color-success);
 }
 
 .overall-score .label {
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .story-sidebar {

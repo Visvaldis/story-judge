@@ -35,8 +35,8 @@ defineProps<{
 
 <style scoped>
 .coverage-checklist {
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 1.25rem;
 }
@@ -46,7 +46,7 @@ defineProps<{
 }
 
 .description {
-  color: #888;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
@@ -62,8 +62,8 @@ defineProps<{
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #333;
-  color: #888;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
 }
 
 .checklist-item:last-child {
@@ -71,11 +71,11 @@ defineProps<{
 }
 
 .checklist-item.checked {
-  color: #42b883;
+  color: var(--color-success);
 }
 
 .checklist-item.checked .icon {
-  color: #42b883;
+  color: var(--color-success);
 }
 
 .icon {
@@ -88,13 +88,13 @@ defineProps<{
   text-align: center;
   font-size: 1.25rem;
   font-weight: bold;
-  color: #42b883;
+  color: var(--color-success);
 }
 
 .coverage-score .label {
   display: block;
   font-size: 0.75rem;
   font-weight: normal;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 </style>

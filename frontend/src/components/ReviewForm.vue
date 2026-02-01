@@ -187,13 +187,13 @@ async function handleSubmit() {
 }
 
 .btn-primary {
-  background: #646cff;
+  background: var(--color-accent);
   color: white;
 }
 
 .btn-secondary {
-  background: #333;
-  color: white;
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 .btn:disabled {
@@ -202,8 +202,8 @@ async function handleSubmit() {
 }
 
 .review-form {
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 1.5rem;
 }
@@ -221,12 +221,12 @@ async function handleSubmit() {
 .score-input label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .weight {
   font-size: 0.75rem;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .score-slider {
@@ -237,7 +237,7 @@ async function handleSubmit() {
 
 .score-slider input[type="range"] {
   flex: 1;
-  accent-color: #646cff;
+  accent-color: var(--color-accent);
 }
 
 .score-value {
@@ -259,7 +259,7 @@ async function handleSubmit() {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .form-group textarea,
@@ -267,10 +267,10 @@ async function handleSubmit() {
 .list-input input {
   width: 100%;
   padding: 0.75rem;
-  background: #16162a;
-  border: 1px solid #333;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  color: white;
+  color: var(--color-text-primary);
   font-family: inherit;
 }
 
@@ -296,13 +296,13 @@ async function handleSubmit() {
 }
 
 .item.strength {
-  background: rgba(66, 184, 131, 0.2);
-  color: #42b883;
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--color-success);
 }
 
 .item.improvement {
-  background: rgba(240, 173, 78, 0.2);
-  color: #f0ad4e;
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--color-warning);
 }
 
 .item button {
@@ -315,9 +315,9 @@ async function handleSubmit() {
 }
 
 .error {
-  color: #ff6b6b;
+  color: var(--color-error);
   padding: 1rem;
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(239, 68, 68, 0.1);
   border-radius: 4px;
   margin-bottom: 1rem;
 }
