@@ -24,7 +24,10 @@ export default tseslint.config(
         setInterval: 'readonly',
         clearInterval: 'readonly',
         confirm: 'readonly',
-        alert: 'readonly'
+        alert: 'readonly',
+        Event: 'readonly',
+        Element: 'readonly',
+        HTMLInputElement: 'readonly'
       }
     }
   },

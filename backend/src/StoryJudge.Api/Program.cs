@@ -138,6 +138,17 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Handle forwarded headers from Cloud Run's load balancer FIRST
+// This must be before any middleware that checks the request scheme
+var forwardedHeadersOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+};
+// Clear restrictions to trust Cloud Run's load balancer
+forwardedHeadersOptions.KnownNetworks.Clear();
+forwardedHeadersOptions.KnownProxies.Clear();
+app.UseForwardedHeaders(forwardedHeadersOptions);
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -145,15 +156,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// CORS must be first to handle preflight requests
+// CORS must be early to handle preflight requests
 app.UseCors();
-
-// Handle forwarded headers from Cloud Run's load balancer
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
-                     | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
-});
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
